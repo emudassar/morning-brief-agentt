@@ -1,0 +1,96 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-sm text-slate-700 antialiased sm:text-base;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply tracking-tightest text-slate-900;
+  }
+
+  p {
+    @apply leading-relaxed;
+  }
+
+  a,
+  button,
+  input,
+  select,
+  textarea {
+    @apply transition-all duration-300;
+  }
+
+  a:focus-visible,
+  button:focus-visible,
+  input:focus-visible,
+  select:focus-visible,
+  textarea:focus-visible {
+    @apply outline-none ring-2 ring-brand-500/30;
+  }
+}
+
+@layer components {
+  .app-shell {
+    @apply min-h-full bg-surface;
+    background-image: radial-gradient(circle at 20% 0%, rgba(99, 102, 241, 0.08), transparent 34%);
+  }
+
+  .page-container {
+    @apply mx-auto w-full max-w-6xl px-4 py-8 sm:px-6 lg:px-8;
+  }
+
+  .card-premium {
+    @apply rounded-2xl border border-slate-200/70 bg-white shadow-soft transition-all duration-300;
+  }
+
+  .link-brand {
+    @apply font-medium text-brand-600 transition-colors hover:text-brand-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-brand-500/30 rounded;
+  }
+
+  .text-muted {
+    @apply text-slate-500;
+  }
+
+  .interactive {
+    @apply transition-all duration-300;
+  }
+
+  .section-title {
+    @apply text-2xl font-bold tracking-tightest text-slate-900 sm:text-3xl;
+  }
+
+  .section-subtitle {
+    @apply text-sm text-slate-500 sm:text-base;
+  }
+
+  .auth-fade-in {
+    animation: authFadeIn 420ms ease-out;
+  }
+}
+
+@keyframes authFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
