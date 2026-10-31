@@ -47,7 +47,7 @@ npm install
 
 ### 3. Configure environment variables
 
-Create a `.env` file inside the `server` folder and add your required API keys and database credentials.
+Copy `server/.env.example` to `server/.env` and `client/.env.example` to `client/.env`, then fill in your keys (MongoDB, Gemini, Telegram, OpenWeather, NewsData).
 
 ### 4. Run the application
 
@@ -66,3 +66,13 @@ npm run dev
 ```
 
 The frontend will be available at **http://localhost:5173** and the backend at **http://localhost:5000**.
+
+
+## ☁️ Deployment
+
+| Part | Host | Folder | Notes |
+|---|---|---|---|
+| Frontend | Vercel | `client/` | Set `VITE_API_URL` to the Render backend URL |
+| Backend + scheduler + Telegram bot | Render | `server/` | Configured by `render.yaml`; set secrets in the Render dashboard |
+
+The backend must stay awake for scheduled briefings. Render's free plan sleeps after ~15 minutes idle, so use the Starter plan for reliable delivery.
