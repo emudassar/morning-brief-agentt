@@ -72,7 +72,7 @@ The frontend will be available at **http://localhost:5173** and the backend at *
 
 | Part | Host | Folder | Notes |
 |---|---|---|---|
-| Frontend | Vercel | `client/` | Set `VITE_API_URL` to the Render backend URL |
-| Backend + scheduler + Telegram bot | Render | `server/` | Configured by `render.yaml`; set secrets in the Render dashboard |
+| Frontend | Vercel — https://morning-brief-frontend.vercel.app | `client/` | `VITE_API_URL` = Render backend URL |
+| Backend + scheduler + Telegram bot | Render — https://morning-brief-agent-hoka.onrender.com | `server/` | Configured by `render.yaml`; set secrets in the Render dashboard |
 
 The backend must stay awake for scheduled briefings. Render's free plan sleeps after ~15 minutes idle, so use the Starter plan for reliable delivery.
