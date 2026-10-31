@@ -1,0 +1,32 @@
+# Render blueprint: deploys only the backend (server/). The frontend lives on Vercel (client/).
+services:
+  - type: web
+    name: morning-brief-agent
+    runtime: node
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /health
+    plan: free # Free sleeps after ~15 min idle; use "starter" so scheduled briefings always fire
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: CLIENT_URL
+        value: https://morning-brief-frontend.vercel.app
+      # Secrets: enter these in the Render dashboard (sync: false = not stored in git)
+      - key: MONGO_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: OPENWEATHER_API_KEY
+        sync: false
+      - key: NEWSDATA_API_KEY
+        sync: false
+      - key: LEMONSQUEEZY_WEBHOOK_SECRET
+        sync: false

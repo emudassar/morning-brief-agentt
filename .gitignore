@@ -1,4 +1,6 @@
+# Dependencies, secrets, build output and logs (never commit these)
 node_modules/
 .env
 *.log
 .DS_Store
+client/dist/

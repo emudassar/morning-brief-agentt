@@ -11,6 +11,7 @@ import Dashboard from "./pages/Dashboard.jsx";
 import Landing from "./pages/Landing.jsx";
 import Pricing from "./pages/Pricing.jsx";
 
+// Scrolls to the top whenever the route changes.
 function ScrollToTop() {
   const { pathname } = useLocation();
 
@@ -21,6 +22,7 @@ function ScrollToTop() {
   return null;
 }
 
+// App shell: auth provider, router, toast notifications, and all page routes.
 export default function App() {
   return (
     <AuthProvider>
@@ -53,10 +55,12 @@ export default function App() {
           }}
         />
         <Routes>
+          {/* Public pages */}
           <Route path="/" element={<Landing />} />
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          {/* Logged-in pages: onboarding (Telegram -> preferences) then the dashboard */}
           <Route
             path="/connect-telegram"
             element={
@@ -81,6 +85,7 @@ export default function App() {
               </ProtectedRoute>
             }
           />
+          {/* Anything unknown goes to login */}
           <Route path="*" element={<Navigate to="/login" replace />} />
         </Routes>
       </BrowserRouter>

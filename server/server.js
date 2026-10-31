@@ -1,6 +1,9 @@
 require("dotenv").config();
 
-// Express API entry: middleware, REST routes, MongoDB connection, health check, and cron scheduler startup.
+// server.js — API entry point.
+// Order: load env -> middleware (CORS, security, logging) -> routes -> health checks -> connect DB -> start scheduler + Telegram bot.
+
+// ---------- Imports ----------
 const express = require("express");
 const cors = require("cors");
 const helmet = require("helmet");
@@ -13,9 +16,9 @@ const { startScheduler, getSchedulerStatus } = require("./scheduler/scheduler");
 
 const app = express();
 
+// ---------- CORS: only the deployed frontend (CLIENT_URL) and local dev may call this API ----------
 const allowedOrigins = [
   process.env.CLIENT_URL,
-  process.env.VERCEL_URL,
   "http://localhost:3000",
   "http://localhost:5173",
 ].filter(Boolean);
@@ -31,8 +34,13 @@ app.use(
     credentials: true,
   })
 );
+
+// ---------- Security headers and request logging ----------
 app.use(helmet());
 app.use(morgan("dev"));
+
+// ---------- Routes ----------
+// Webhooks must be mounted BEFORE express.json(): signature checks need the raw request body.
 app.use("/api", require("./routes/webhooks"));
 app.use(express.json());
 
@@ -40,6 +48,8 @@ app.use("/api/auth", auth);
 app.use("/api/user", user);
 app.use("/api/briefing", briefing);
 
+// ---------- Health and debug endpoints ----------
+// Root: simple "is it up" message (also handy as a Render health check).
 app.get("/", (req, res) => {
   res.json({
     ok: true,
@@ -48,6 +58,7 @@ app.get("/", (req, res) => {
   });
 });
 
+// Telegram status that never throws, so /health keeps working even if the bot failed to start.
 function safeTelegramStatus() {
   try {
     return require("./services/telegram").getTelegramBotStatus();
@@ -56,6 +67,7 @@ function safeTelegramStatus() {
   }
 }
 
+// /health: public status of the scheduler and Telegram bot.
 app.get("/health", (req, res) => {
   const scheduler = getSchedulerStatus();
   const telegram = safeTelegramStatus();
@@ -82,6 +94,7 @@ app.get("/health", (req, res) => {
   });
 });
 
+// /debug/scheduler: full scheduler details, locked behind DEBUG_SCHEDULER_SECRET.
 app.get("/debug/scheduler", (req, res) => {
   const secret = process.env.DEBUG_SCHEDULER_SECRET;
   if (!secret) {
@@ -104,8 +117,10 @@ app.get("/debug/scheduler", (req, res) => {
   });
 });
 
+// ---------- Startup ----------
 const PORT = process.env.PORT || 5000;
 
+// Connect to MongoDB first, then listen, then start the daily-briefing scheduler and the Telegram bot.
 async function start() {
   await db();
   app.listen(PORT, () => {
